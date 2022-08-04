@@ -1,0 +1,54 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
+}
+
+android {
+    compileSdk rootProject.targetSdkVersion
+
+    defaultConfig {
+        minSdk rootProject.minSdkVersion
+        targetSdk rootProject.targetSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+}
+
+dependencies {
+    implementation "androidx.viewpager2:viewpager2:latest.release"
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            Production(MavenPublication) {
+                // Applies the component for the release build variant.
+                from components.release
+
+                // 使用方引用 implementation 'cn.com.jack:mavendemo:2.7.0-SNAPSHOT'
+                groupId = "cn.xihan.lib"
+                artifactId = "banner"
+                version = "2.2.2"
+            }
+        }
+        repositories {
+            maven{url 'file:///F:/Android//repository/'}
+        }
+    }
+}

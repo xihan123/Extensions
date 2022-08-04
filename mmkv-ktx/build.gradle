@@ -1,0 +1,58 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
+    id "org.jetbrains.kotlin.plugin.parcelize"
+    id 'org.jetbrains.kotlin.plugin.serialization'
+}
+
+android {
+    compileSdk rootProject.targetSdkVersion
+
+    defaultConfig {
+        minSdk rootProject.minSdkVersion
+        targetSdk rootProject.targetSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+        freeCompilerArgs += ['-module-name', "mmkv-ktx"]
+    }
+}
+
+dependencies {
+    api "com.tencent:mmkv-static:$mmkvVersion"
+    implementation "androidx.startup:startup-runtime:$starupVersion"
+    compileOnly "org.jetbrains.kotlinx:kotlinx-serialization-core:$kotlinJsonVersion"
+    compileOnly "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinJsonVersion"
+}
+
+
+afterEvaluate {
+    publishing {
+        publications {
+            Production(MavenPublication) {
+                from components.release
+                groupId = "cn.xihan.lib"
+                artifactId = "mmkv-ktx"
+                version = "1.1.1"
+            }
+        }
+        repositories {
+            maven{url 'file:///F:/Android//repository/'}
+        }
+    }
+}
